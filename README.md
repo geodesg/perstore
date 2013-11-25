@@ -271,6 +271,12 @@ to the query string format. For example:
 		or(eq("foo",3),eq("foo","bar")).lt("price",10)...
 	}
 
+One can also execute a limit query, and retrieve the total count from the totalCount property,
+if you supply a third argument to limit, maxCount, which can set a limit on how high
+it should compute the total count (in case it is expensive to compute this at the DB level):
+
+	MyModel.query("limit(0,10,Infinity)").totalCount 
+
 For a more a complete reference guide to the RQL and the available query operators,
 see [[http://github.com/persvr/rql]]. This also provides information on
 the parsed query data structure which is important if you want to implement your
