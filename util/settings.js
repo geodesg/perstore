@@ -12,11 +12,11 @@ try{
 	var settings = JSON.parse(read("local.json").toString("utf8"));
 }catch(e){
 	try{
-		if(typeof java == "object"){
+		if(typeof java == "object" && typeof getResource == "function"){
 			settings = JSON.parse(getResource("local.json").content);
 		}else{
 			settings = require("rc")("persvr",{
-				"processes": 2,
+				"processes": 1,
 				"port": 8082,
 				"repl": true,
 				"replPort": 5555,
