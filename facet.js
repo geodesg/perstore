@@ -678,7 +678,7 @@ exports.Restrictive = function(appliesTo, schema){
 		};
 	}
 	for(var i in appliesTo){
-		if(!facet[i] && i.substring(0,3) == "get"){
+		if(!facet[i] && (i.substring(0,3) == "get" || i == "setPath")){
 			(function(i){
 				facet[i] = function(){
 					return facet.wrap(appliesTo[i].apply(appliesTo, arguments));
