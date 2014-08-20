@@ -36,7 +36,38 @@ Model.Model = Model;
 Model.Store = function(store){
 	return Model(store,  {});//(store.getSchema ? store.getSchema() : {});
 }
+var models = Model.models = [];
+Model.defineModel = function(model){
+	if(typeof model === 'string'){
+		model = require(model);
+	}
+	models.push(model);
+	setPath(model, name, name);
+	// this clears the cache
+	groupsToRoot = {};
+};
 
+var groupsToRoot = {};
+Model.getRootModelByGroups = function(groups){
+	if(groupsToRoot[groups]){
+		// we can cache the computed value
+		return groupsToRoot[groups];
+	}
+	var rootModel = groupsToRoot[groups] = {};
+	models.forEach(function(model){
+		// determine if the user's groups match any of the model's groups
+		var modelGroups = model.groups;
+		var matches = modelGroups && groups.some(function(group){
+			return modelGroups.indexOf(group) > -1;
+		});
+		var name = model.name;
+		// if it model with this name hasn't been assigned, or is a higher level, assign it
+		if(matches && (!name in rootModel || rootModel[name].level < model.level)){
+			rootModel[name] = model;
+		}
+	});
+	return rootModel;
+}
 var modelPaths = {};
 Model.initializeRoot = function(dataModel, addClass){
 	if(addClass){
@@ -49,6 +80,7 @@ Model.initializeRoot = function(dataModel, addClass){
 };
 function setPath(model, path, name){
 	if (!model) return;
+	name = name || model.name;
 	modelPaths[path] = model;
 	for(var key in model){
 		var target = model[key];
