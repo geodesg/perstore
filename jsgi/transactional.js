@@ -3,7 +3,7 @@
  * as the interface for accessing persistent and commiting the transaction
  * if successful, otherwise if an error is thrown, the transaction will be aborted
  */
-exports.Transactional = Transactional;
+exports = module.exports = Transactional;
 var transaction = require("../transaction").transaction;
 
 function Transactional(nextApp){
@@ -16,4 +16,5 @@ function Transactional(nextApp){
 		});
 	};
 }
-
+// back-compat property reference
+exports.Transactional = exports;
